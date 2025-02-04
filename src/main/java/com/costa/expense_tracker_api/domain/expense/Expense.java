@@ -1,5 +1,6 @@
-package com.costa.expense_tracker_api.domain.user;
+package com.costa.expense_tracker_api.domain.expense;
 
+import com.costa.expense_tracker_api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
