@@ -1,0 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE expense(
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    value DECIMAL(10, 2) NOT NULL DEFAULT 0.0,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    category VARCHAR(20) NOT NULL,
+    description TEXT,
+    user_id UUID,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
