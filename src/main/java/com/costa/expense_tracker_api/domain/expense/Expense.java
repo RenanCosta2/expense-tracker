@@ -23,7 +23,7 @@ public class Expense {
     private UUID id;
     private Float value;
     private Date date;
-    private String category;
+    private ExpenseCategory category;
     private String description;
 
     @ManyToOne
