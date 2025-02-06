@@ -2,6 +2,7 @@ package com.costa.expense_tracker_api.controllers;
 
 import com.costa.expense_tracker_api.domain.user.*;
 import com.costa.expense_tracker_api.exceptions.InvalidCredentialsException;
+import com.costa.expense_tracker_api.exceptions.UserAlreadyExistsException;
 import com.costa.expense_tracker_api.infra.security.TokenService;
 import com.costa.expense_tracker_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO data){
-        if(this.userRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if(this.userRepository.findByLogin(data.login()).isPresent()) throw new UserAlreadyExistsException();
 
         String encryptedPassword = passwordEncoder.encode(data.password());
         User newUser = new User();

@@ -1,5 +1,6 @@
 package com.costa.expense_tracker_api.services;
 
+import com.costa.expense_tracker_api.exceptions.UserNotFound;
 import com.costa.expense_tracker_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ public class AuthorizationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLogin(username);
+        return userRepository.findByLogin(username)
+                .orElseThrow(UserNotFound::new);
     }
 }

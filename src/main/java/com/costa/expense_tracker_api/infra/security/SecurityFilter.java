@@ -1,5 +1,6 @@
 package com.costa.expense_tracker_api.infra.security;
 
+import com.costa.expense_tracker_api.exceptions.UserNotFound;
 import com.costa.expense_tracker_api.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +27,8 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if(token != null){
             var login = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByLogin(login);
+            UserDetails user = userRepository.findByLogin(login)
+                    .orElseThrow(UserNotFound::new);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

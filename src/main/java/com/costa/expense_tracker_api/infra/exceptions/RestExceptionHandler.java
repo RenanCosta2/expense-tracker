@@ -38,4 +38,16 @@ public class RestExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
     }
+
+    @ExceptionHandler(UserNotFound.class)
+    private ResponseEntity<RestErrorMessage> userNotFoundErrorHandler(UserNotFound exception){
+        RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    private ResponseEntity<RestErrorMessage> userAlreadyExistsHandler(UserAlreadyExistsException exception){
+        RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
+    }
 }
