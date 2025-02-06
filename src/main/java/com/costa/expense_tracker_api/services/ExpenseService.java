@@ -6,6 +6,7 @@ import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
 import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserUtils;
+import com.costa.expense_tracker_api.exceptions.ExpenseNotFound;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,7 +45,7 @@ public class ExpenseService {
     public ExpenseResponseDTO getExpense(UUID id){
         User user = (User) UserUtils.getUserLogged();
         Expense expense = this.expenseRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+                .orElseThrow((ExpenseNotFound::new));
 
         return ExpenseResponseDTO.fromEntity(expense);
     }
@@ -52,7 +53,7 @@ public class ExpenseService {
     public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO data){
         User user = (User) UserUtils.getUserLogged();
         Expense expense = this.expenseRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+                .orElseThrow((ExpenseNotFound::new));
 
         if(data.value() != null) expense.setValue(data.value());
         if(data.date() != null) expense.setDate(new Date(data.date()));
@@ -67,7 +68,7 @@ public class ExpenseService {
     public void deleteExpense(UUID id){
         User user = (User) UserUtils.getUserLogged();
         Expense expense = this.expenseRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+                .orElseThrow(ExpenseNotFound::new);
 
         this.expenseRepository.deleteById(id);
     }

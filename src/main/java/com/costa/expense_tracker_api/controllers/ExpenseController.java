@@ -1,15 +1,12 @@
 package com.costa.expense_tracker_api.controllers;
 
-import com.costa.expense_tracker_api.domain.expense.Expense;
 import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
 import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import com.costa.expense_tracker_api.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.net.URI;
 import java.util.Date;
@@ -38,13 +35,10 @@ public class ExpenseController {
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable UUID expenseId){
 
-        try{
-            ExpenseResponseDTO expense = this.expenseService.getExpense(expenseId);
+        ExpenseResponseDTO expense = this.expenseService.getExpense(expenseId);
 
-            return ResponseEntity.ok(expense);
-        } catch (IllegalArgumentException exception){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(expense);
+
     }
 
     @GetMapping("/past-week")
@@ -88,24 +82,18 @@ public class ExpenseController {
 
     @PatchMapping("/{expenseId}")
     public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable UUID expenseId, @RequestBody ExpenseRequestDTO data){
-        try{
-            ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
 
-            return ResponseEntity.ok(expense);
+        ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
 
-        } catch (IllegalArgumentException exception){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(expense);
+
     }
 
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<Void> deleteExpense(@PathVariable UUID expenseId){
-        try{
-            this.expenseService.deleteExpense(expenseId);
 
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException exception){
-            return ResponseEntity.notFound().build();
-        }
+        this.expenseService.deleteExpense(expenseId);
+
+        return ResponseEntity.noContent().build();
     }
 }
