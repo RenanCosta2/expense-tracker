@@ -1,11 +1,13 @@
 package com.costa.expense_tracker_api.controllers;
 
 import com.costa.expense_tracker_api.domain.user.*;
+import com.costa.expense_tracker_api.exceptions.InvalidCredentialsException;
 import com.costa.expense_tracker_api.infra.security.TokenService;
 import com.costa.expense_tracker_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +34,17 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        try{
+            var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+
+        } catch (InternalAuthenticationServiceException exception) {
+            throw new InvalidCredentialsException();
+        }
     }
 
     @PostMapping("/register")
