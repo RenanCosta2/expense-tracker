@@ -27,6 +27,12 @@ public class RestExceptionHandler {
         return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    private ResponseEntity<RestErrorMessage> invalidTokenHandler(InvalidTokenException exception){
+        RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     private ResponseEntity<RestErrorMessage> invalidCredentialsHandler(InvalidCredentialsException exception){
         RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
