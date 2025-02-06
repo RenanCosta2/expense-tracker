@@ -41,11 +41,11 @@ public class ExpenseController {
         return ResponseEntity.created(location).body(expenseResponseDTO);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable UUID userId){
+    @GetMapping("/{expenseId}")
+    public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable UUID expenseId){
 
         try{
-            ExpenseResponseDTO expense = this.expenseService.getExpense(userId);
+            ExpenseResponseDTO expense = this.expenseService.getExpense(expenseId);
 
             return ResponseEntity.ok(expense);
         } catch (IllegalArgumentException exception){
