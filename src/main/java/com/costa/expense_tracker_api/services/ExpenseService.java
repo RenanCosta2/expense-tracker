@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ExpenseService {
@@ -39,6 +40,19 @@ public class ExpenseService {
 
         return newExpense;
 
+    }
+
+    public ExpenseResponseDTO getExpense(UUID id){
+        Expense expense = this.expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+
+        return new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        );
     }
 
     public List<ExpenseResponseDTO> getPastWeekExpenses(int page, int size){

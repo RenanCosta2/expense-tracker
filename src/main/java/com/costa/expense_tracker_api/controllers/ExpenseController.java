@@ -6,12 +6,15 @@ import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import com.costa.expense_tracker_api.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/expense")
@@ -36,6 +39,18 @@ public class ExpenseController {
                 newExpense.getDescription());
 
         return ResponseEntity.created(location).body(expenseResponseDTO);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable UUID userId){
+
+        try{
+            ExpenseResponseDTO expense = this.expenseService.getExpense(userId);
+
+            return ResponseEntity.ok(expense);
+        } catch (IllegalArgumentException exception){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/past-week")
