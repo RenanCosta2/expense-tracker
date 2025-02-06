@@ -42,14 +42,16 @@ public class ExpenseService {
     }
 
     public ExpenseResponseDTO getExpense(UUID id){
-        Expense expense = this.expenseRepository.findById(id)
+        User user = (User) UserUtils.getUserLogged();
+        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
 
         return ExpenseResponseDTO.fromEntity(expense);
     }
 
     public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO data){
-        Expense expense = this.expenseRepository.findById(id)
+        User user = (User) UserUtils.getUserLogged();
+        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
 
         if(data.value() != null) expense.setValue(data.value());
@@ -63,7 +65,8 @@ public class ExpenseService {
     }
 
     public void deleteExpense(UUID id){
-        Expense expense = this.expenseRepository.findById(id)
+        User user = (User) UserUtils.getUserLogged();
+        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
 
         this.expenseRepository.deleteById(id);

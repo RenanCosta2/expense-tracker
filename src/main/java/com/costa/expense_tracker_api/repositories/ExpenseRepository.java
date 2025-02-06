@@ -1,6 +1,7 @@
 package com.costa.expense_tracker_api.repositories;
 
 import com.costa.expense_tracker_api.domain.expense.Expense;
+import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
@@ -18,4 +20,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
                                               @Param("endDate")Date endDate,
                                               @Param("user") User user,
                                               Pageable pageable);
+
+    @Query("SELECT e FROM Expense e WHERE e.id = :expenseId AND e.user = :user")
+    public Optional<Expense> findByIdAndUser(@Param("expenseId") UUID expenseId,
+                                            @Param("user") User user);
 }
