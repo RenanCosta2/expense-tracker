@@ -38,27 +38,14 @@ public class ExpenseService {
 
         expenseRepository.save(newExpense);
 
-        return new ExpenseResponseDTO(
-                newExpense.getId(),
-                newExpense.getValue(),
-                newExpense.getDate(),
-                newExpense.getCategory().getCategory(),
-                newExpense.getDescription()
-        );
-
+        return ExpenseResponseDTO.fromEntity(newExpense);
     }
 
     public ExpenseResponseDTO getExpense(UUID id){
         Expense expense = this.expenseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
 
-        return new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        );
+        return ExpenseResponseDTO.fromEntity(expense);
     }
 
     public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO data){
@@ -72,13 +59,7 @@ public class ExpenseService {
 
         this.expenseRepository.save(expense);
 
-        return new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        );
+        return ExpenseResponseDTO.fromEntity(expense);
     }
 
     public void deleteExpense(UUID id){
@@ -102,13 +83,7 @@ public class ExpenseService {
                                                                                          user,
                                                                                          pageable);
 
-        return expensePage.map(expense -> new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        )).stream().toList();
+        return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
 
     }
 
@@ -126,13 +101,7 @@ public class ExpenseService {
                                                                                          user,
                                                                                          pageable);
 
-        return expensePage.map(expense -> new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        )).stream().toList();
+        return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
     }
 
     public List<ExpenseResponseDTO> getPastThreeMonthsExpenses(int page, int size){
@@ -149,13 +118,7 @@ public class ExpenseService {
                                                                                          user,
                                                                                          pageable);
 
-        return expensePage.map(expense -> new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        )).stream().toList();
+        return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
     }
 
     public List<ExpenseResponseDTO> getExpensesBetweenCustomDate(int page, int size, Date startDate, Date endDate){
@@ -168,13 +131,7 @@ public class ExpenseService {
                                                                                          user,
                                                                                          pageable);
 
-        return expensePage.map(expense -> new ExpenseResponseDTO(
-                expense.getId(),
-                expense.getValue(),
-                expense.getDate(),
-                expense.getCategory().getCategory(),
-                expense.getDescription()
-        )).stream().toList();
+        return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
     }
 
 }
