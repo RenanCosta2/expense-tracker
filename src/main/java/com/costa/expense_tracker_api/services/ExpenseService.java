@@ -3,13 +3,19 @@ package com.costa.expense_tracker_api.services;
 import com.costa.expense_tracker_api.domain.expense.Expense;
 import com.costa.expense_tracker_api.domain.expense.ExpenseCategory;
 import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
+import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserUtils;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ExpenseService {
@@ -35,5 +41,93 @@ public class ExpenseService {
 
     }
 
+    public List<ExpenseResponseDTO> getPastWeekExpenses(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date dateOneWeekAgo = calendar.getTime();
+
+        User user = (User) UserUtils.getUserLogged();
+
+        Page<Expense> expensePage = this.expenseRepository.findExpensesBetweenCustomDate(dateOneWeekAgo,
+                                                                                         new Date(),
+                                                                                         user,
+                                                                                         pageable);
+
+        return expensePage.map(expense -> new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        )).stream().toList();
+
+    }
+
+    public List<ExpenseResponseDTO> getPastMonthExpenses(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        Date dateOneMonthAgo = calendar.getTime();
+
+        User user = (User) UserUtils.getUserLogged();
+
+        Page<Expense> expensePage = this.expenseRepository.findExpensesBetweenCustomDate(dateOneMonthAgo,
+                                                                                         new Date(),
+                                                                                         user,
+                                                                                         pageable);
+
+        return expensePage.map(expense -> new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        )).stream().toList();
+    }
+
+    public List<ExpenseResponseDTO> getPastThreeMonthsExpenses(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -3);
+        Date dateThreeMonthsAgo = calendar.getTime();
+
+        User user = (User) UserUtils.getUserLogged();
+
+        Page<Expense> expensePage = this.expenseRepository.findExpensesBetweenCustomDate(dateThreeMonthsAgo,
+                                                                                         new Date(),
+                                                                                         user,
+                                                                                         pageable);
+
+        return expensePage.map(expense -> new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        )).stream().toList();
+    }
+
+    public List<ExpenseResponseDTO> getExpensesBetweenCustomDate(int page, int size, Date startDate, Date endDate){
+        Pageable pageable = PageRequest.of(page, size);
+
+        User user = (User) UserUtils.getUserLogged();
+
+        Page<Expense> expensePage = this.expenseRepository.findExpensesBetweenCustomDate(startDate,
+                                                                                         endDate,
+                                                                                         user,
+                                                                                         pageable);
+
+        return expensePage.map(expense -> new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        )).stream().toList();
+    }
 
 }

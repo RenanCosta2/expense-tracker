@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,4 +38,42 @@ public class ExpenseController {
         return ResponseEntity.created(location).body(expenseResponseDTO);
     }
 
+    @GetMapping("/past-week")
+    public ResponseEntity<List<ExpenseResponseDTO>> getPastWeekExpenses(@RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size){
+        List<ExpenseResponseDTO> pastWeekExpenses = this.expenseService.getPastWeekExpenses(page, size);
+        return ResponseEntity.ok(pastWeekExpenses);
+    }
+
+    @GetMapping("past-month")
+    public ResponseEntity<List<ExpenseResponseDTO>> getPastMonthExpenses(@RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size){
+        List<ExpenseResponseDTO> pastMonthExpenses = this.expenseService.getPastMonthExpenses(page, size);
+        return ResponseEntity.ok(pastMonthExpenses);
+    }
+
+    @GetMapping("past-three-months")
+    public ResponseEntity<List<ExpenseResponseDTO>> getPastThreeMonthsExpenses(@RequestParam(defaultValue = "0") int page,
+                                                                               @RequestParam(defaultValue = "10") int size){
+        List<ExpenseResponseDTO> pastThreeMonthsExpenses = this.expenseService.getPastThreeMonthsExpenses(page, size);
+        return ResponseEntity.ok(pastThreeMonthsExpenses);
+    }
+
+    @GetMapping("past-custom")
+    public ResponseEntity<List<ExpenseResponseDTO>> getPastExpensesBetweenCustomDate(@RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "10") int size,
+                                                                    @RequestParam Long startDate,
+                                                                    @RequestParam Long endDate){
+        Date start = new Date(startDate);
+        Date end = new Date(endDate);
+
+        List<ExpenseResponseDTO> pastExpensesBetweenCustomDate = this.expenseService.getExpensesBetweenCustomDate(
+                page,
+                size,
+                start,
+                end
+        );
+
+        return ResponseEntity.ok(pastExpensesBetweenCustomDate);
+    }
 }
