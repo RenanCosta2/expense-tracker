@@ -28,17 +28,11 @@ public class ExpenseController {
 
     @PostMapping
     public ResponseEntity<ExpenseResponseDTO> create(@RequestBody ExpenseRequestDTO body){
-        Expense newExpense = this.expenseService.createExpense(body);
+        ExpenseResponseDTO newExpense = this.expenseService.createExpense(body);
 
-        URI location = URI.create("/expenses/" + newExpense.getId());
+        URI location = URI.create("/expense/" + newExpense.id());
 
-        ExpenseResponseDTO expenseResponseDTO = new ExpenseResponseDTO(newExpense.getId(),
-                newExpense.getValue(),
-                newExpense.getDate(),
-                newExpense.getCategory().getCategory(),
-                newExpense.getDescription());
-
-        return ResponseEntity.created(location).body(expenseResponseDTO);
+        return ResponseEntity.created(location).body(newExpense);
     }
 
     @GetMapping("/{expenseId}")

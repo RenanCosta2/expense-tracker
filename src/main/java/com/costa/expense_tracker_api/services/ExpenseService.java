@@ -24,7 +24,7 @@ public class ExpenseService {
     @Autowired
     ExpenseRepository expenseRepository;
 
-    public Expense createExpense(ExpenseRequestDTO data){
+    public ExpenseResponseDTO createExpense(ExpenseRequestDTO data){
 
         Expense newExpense = new Expense();
         newExpense.setValue(data.value());
@@ -38,7 +38,13 @@ public class ExpenseService {
 
         expenseRepository.save(newExpense);
 
-        return newExpense;
+        return new ExpenseResponseDTO(
+                newExpense.getId(),
+                newExpense.getValue(),
+                newExpense.getDate(),
+                newExpense.getCategory().getCategory(),
+                newExpense.getDescription()
+        );
 
     }
 
