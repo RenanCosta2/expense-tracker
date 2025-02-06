@@ -88,9 +88,14 @@ public class ExpenseController {
 
     @PatchMapping("/{expenseId}")
     public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable UUID expenseId, @RequestBody ExpenseRequestDTO data){
-        ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
+        try{
+            ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
 
-        return ResponseEntity.ok(expense);
+            return ResponseEntity.ok(expense);
+
+        } catch (IllegalArgumentException exception){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{expenseId}")
