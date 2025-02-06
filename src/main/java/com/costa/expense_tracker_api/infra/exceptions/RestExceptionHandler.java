@@ -28,7 +28,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    private ResponseEntity<RestErrorMessage> invalidTokenHandler(InvalidCredentialsException exception){
+    private ResponseEntity<RestErrorMessage> invalidCredentialsHandler(InvalidCredentialsException exception){
         RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
     }
