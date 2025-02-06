@@ -92,6 +92,13 @@ public class ExpenseController {
         return ResponseEntity.ok(pastExpensesBetweenCustomDate);
     }
 
+    @PatchMapping("/{expenseId}")
+    public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable UUID expenseId, @RequestBody ExpenseRequestDTO data){
+        ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
+
+        return ResponseEntity.ok(expense);
+    }
+
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<Void> deleteExpense(@PathVariable UUID expenseId){
         try{

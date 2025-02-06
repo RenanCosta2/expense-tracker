@@ -55,6 +55,26 @@ public class ExpenseService {
         );
     }
 
+    public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO data){
+        Expense expense = this.expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+
+        if(data.value() != null) expense.setValue(data.value());
+        if(data.date() != null) expense.setDate(new Date(data.date()));
+        if(data.category() != null) expense.setCategory(ExpenseCategory.valueOf(data.category()));
+        if(data.description() != null) expense.setDescription(data.description());
+
+        this.expenseRepository.save(expense);
+
+        return new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getValue(),
+                expense.getDate(),
+                expense.getCategory().getCategory(),
+                expense.getDescription()
+        );
+    }
+
     public void deleteExpense(UUID id){
         Expense expense = this.expenseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
