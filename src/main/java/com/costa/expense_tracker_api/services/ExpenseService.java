@@ -7,6 +7,7 @@ import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserUtils;
 import com.costa.expense_tracker_api.exceptions.ExpenseNotFound;
+import com.costa.expense_tracker_api.exceptions.InvalidUUIDFormatException;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,17 +43,35 @@ public class ExpenseService {
         return ExpenseResponseDTO.fromEntity(newExpense);
     }
 
-    public ExpenseResponseDTO getExpense(UUID id){
+    public ExpenseResponseDTO getExpense(String id) {
+
+        UUID expenseUUID;
+        try {
+            expenseUUID = UUID.fromString(id);
+
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidUUIDFormatException();
+        }
+
         User user = (User) UserUtils.getUserLogged();
-        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
+        Expense expense = this.expenseRepository.findByIdAndUser(expenseUUID, user)
                 .orElseThrow((ExpenseNotFound::new));
 
         return ExpenseResponseDTO.fromEntity(expense);
     }
 
-    public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO data){
+    public ExpenseResponseDTO updateExpense(String id, ExpenseRequestDTO data){
+
+        UUID expenseUUID;
+        try {
+            expenseUUID = UUID.fromString(id);
+
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidUUIDFormatException();
+        }
+
         User user = (User) UserUtils.getUserLogged();
-        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
+        Expense expense = this.expenseRepository.findByIdAndUser(expenseUUID, user)
                 .orElseThrow((ExpenseNotFound::new));
 
         if(data.value() != null) expense.setValue(data.value());
@@ -65,12 +84,21 @@ public class ExpenseService {
         return ExpenseResponseDTO.fromEntity(expense);
     }
 
-    public void deleteExpense(UUID id){
+    public void deleteExpense(String id){
+
+        UUID expenseUUID;
+        try {
+            expenseUUID = UUID.fromString(id);
+
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidUUIDFormatException();
+        }
+
         User user = (User) UserUtils.getUserLogged();
-        Expense expense = this.expenseRepository.findByIdAndUser(id, user)
+        Expense expense = this.expenseRepository.findByIdAndUser(expenseUUID, user)
                 .orElseThrow(ExpenseNotFound::new);
 
-        this.expenseRepository.deleteById(id);
+        this.expenseRepository.deleteById(expenseUUID);
     }
 
     public List<ExpenseResponseDTO> getPastWeekExpenses(int page, int size){

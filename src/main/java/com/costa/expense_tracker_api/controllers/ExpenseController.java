@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/expense")
@@ -33,7 +32,7 @@ public class ExpenseController {
     }
 
     @GetMapping("/{expenseId}")
-    public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable UUID expenseId){
+    public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable String expenseId){
 
         ExpenseResponseDTO expense = this.expenseService.getExpense(expenseId);
 
@@ -81,7 +80,7 @@ public class ExpenseController {
     }
 
     @PatchMapping("/{expenseId}")
-    public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable UUID expenseId, @RequestBody ExpenseRequestDTO data){
+    public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable String expenseId, @RequestBody ExpenseRequestDTO data){
 
         ExpenseResponseDTO expense = this.expenseService.updateExpense(expenseId, data);
 
@@ -90,7 +89,7 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{expenseId}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable UUID expenseId){
+    public ResponseEntity<Void> deleteExpense(@PathVariable String expenseId){
 
         this.expenseService.deleteExpense(expenseId);
 
