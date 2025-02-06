@@ -55,6 +55,13 @@ public class ExpenseService {
         );
     }
 
+    public void deleteExpense(UUID id){
+        Expense expense = this.expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Expense not found"));
+
+        this.expenseRepository.deleteById(id);
+    }
+
     public List<ExpenseResponseDTO> getPastWeekExpenses(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
 

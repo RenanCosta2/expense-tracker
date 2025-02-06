@@ -91,4 +91,15 @@ public class ExpenseController {
 
         return ResponseEntity.ok(pastExpensesBetweenCustomDate);
     }
+
+    @DeleteMapping("/{expenseId}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable UUID expenseId){
+        try{
+            this.expenseService.deleteExpense(expenseId);
+
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException exception){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
