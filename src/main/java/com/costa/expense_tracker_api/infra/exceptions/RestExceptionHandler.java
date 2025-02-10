@@ -3,10 +3,14 @@ package com.costa.expense_tracker_api.infra.exceptions;
 import com.costa.expense_tracker_api.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import java.util.List;
+
+@RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(ExpenseNotFound.class)
@@ -48,6 +52,16 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     private ResponseEntity<RestErrorMessage> userAlreadyExistsHandler(UserAlreadyExistsException exception){
         RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<RestErrorMessage> methodArgumentNotValidHandler(MethodArgumentNotValidException exception){
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+
+        String errorMessage = fieldErrors.isEmpty() ? "Invalid input" : fieldErrors.getFirst().getDefaultMessage();
+
+        RestErrorMessage restErrorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, errorMessage);
         return ResponseEntity.status(restErrorMessage.getHttpStatus()).body(restErrorMessage);
     }
 }

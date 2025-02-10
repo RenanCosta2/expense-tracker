@@ -1,8 +1,8 @@
 package com.costa.expense_tracker_api.controllers;
 
 import com.costa.expense_tracker_api.domain.user.*;
-import com.costa.expense_tracker_api.services.AuthorizationService;
 import com.costa.expense_tracker_api.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +27,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO data){
+    public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid RegisterDTO data){
 
         UserResponseDTO userResponse = this.userService.createUser(data);
 

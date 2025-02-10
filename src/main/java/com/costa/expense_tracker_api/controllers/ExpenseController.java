@@ -4,6 +4,7 @@ import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
 import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import com.costa.expense_tracker_api.services.ExpenseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ExpenseController {
     private ExpenseRepository expenseRepository;
 
     @PostMapping
-    public ResponseEntity<ExpenseResponseDTO> create(@RequestBody ExpenseRequestDTO body){
+    public ResponseEntity<ExpenseResponseDTO> create(@RequestBody @Valid ExpenseRequestDTO body){
         ExpenseResponseDTO newExpense = this.expenseService.createExpense(body);
 
         URI location = URI.create("/expense/" + newExpense.id());
