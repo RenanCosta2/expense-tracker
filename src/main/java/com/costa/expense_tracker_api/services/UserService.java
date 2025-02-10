@@ -42,7 +42,7 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setRole(data.role());
 
-        userRepository.save(newUser);
+        this.userRepository.save(newUser);
 
         return new UserResponseDTO(newUser.getId(), newUser.getName(), newUser.getLogin(), newUser.getRole().getRole());
 
