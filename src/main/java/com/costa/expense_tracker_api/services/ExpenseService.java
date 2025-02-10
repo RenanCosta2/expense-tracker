@@ -38,7 +38,7 @@ public class ExpenseService {
 
         newExpense.setUser(user);
 
-        expenseRepository.save(newExpense);
+        this.expenseRepository.save(newExpense);
 
         return ExpenseResponseDTO.fromEntity(newExpense);
     }
