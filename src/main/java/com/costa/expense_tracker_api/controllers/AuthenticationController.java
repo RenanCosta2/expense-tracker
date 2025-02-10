@@ -5,6 +5,7 @@ import com.costa.expense_tracker_api.exceptions.InvalidCredentialsException;
 import com.costa.expense_tracker_api.exceptions.UserAlreadyExistsException;
 import com.costa.expense_tracker_api.infra.security.TokenService;
 import com.costa.expense_tracker_api.repositories.UserRepository;
+import com.costa.expense_tracker_api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +25,10 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private TokenService tokenService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data){
@@ -50,18 +48,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO data){
-        if(this.userRepository.findByLogin(data.login()).isPresent()) throw new UserAlreadyExistsException();
 
-        String encryptedPassword = passwordEncoder.encode(data.password());
-        User newUser = new User();
-        newUser.setName(data.name());
-        newUser.setLogin(data.login());
-        newUser.setPassword(encryptedPassword);
-        newUser.setRole(data.role());
-
-        userRepository.save(newUser);
-
-        UserResponseDTO userResponse = new UserResponseDTO(newUser.getId(), newUser.getName(), newUser.getLogin(), newUser.getRole().getRole());
+        UserResponseDTO userResponse = this.userService.createUser(data);
 
         return ResponseEntity.ok(userResponse);
     }
