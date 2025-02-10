@@ -1,7 +1,7 @@
 package com.costa.expense_tracker_api.controllers;
 
-import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
-import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
+import com.costa.expense_tracker_api.domain.expense.dtos.ExpenseRequestDTO;
+import com.costa.expense_tracker_api.domain.expense.dtos.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import com.costa.expense_tracker_api.services.ExpenseService;
 import jakarta.validation.Valid;

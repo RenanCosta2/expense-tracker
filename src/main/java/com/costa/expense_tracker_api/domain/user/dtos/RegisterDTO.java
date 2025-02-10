@@ -1,5 +1,6 @@
-package com.costa.expense_tracker_api.domain.user;
+package com.costa.expense_tracker_api.domain.user.dtos;
 
+import com.costa.expense_tracker_api.domain.user.UserRole;
 import jakarta.validation.constraints.NotNull;
 
 public record RegisterDTO(

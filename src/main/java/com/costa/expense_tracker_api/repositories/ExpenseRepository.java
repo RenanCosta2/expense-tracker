@@ -1,7 +1,6 @@
 package com.costa.expense_tracker_api.repositories;
 
 import com.costa.expense_tracker_api.domain.expense.Expense;
-import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,6 @@
-package com.costa.expense_tracker_api.domain.expense;
+package com.costa.expense_tracker_api.domain.expense.dtos;
+
+import com.costa.expense_tracker_api.domain.expense.Expense;
 
 import java.util.Date;
 import java.util.UUID;

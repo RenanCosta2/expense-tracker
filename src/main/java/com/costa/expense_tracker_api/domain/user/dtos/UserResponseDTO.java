@@ -1,4 +1,4 @@
-package com.costa.expense_tracker_api.domain.user;
+package com.costa.expense_tracker_api.domain.user.dtos;
 
 import java.util.UUID;
 

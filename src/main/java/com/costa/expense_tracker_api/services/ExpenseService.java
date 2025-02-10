@@ -2,8 +2,8 @@ package com.costa.expense_tracker_api.services;
 
 import com.costa.expense_tracker_api.domain.expense.Expense;
 import com.costa.expense_tracker_api.domain.expense.ExpenseCategory;
-import com.costa.expense_tracker_api.domain.expense.ExpenseRequestDTO;
-import com.costa.expense_tracker_api.domain.expense.ExpenseResponseDTO;
+import com.costa.expense_tracker_api.domain.expense.dtos.ExpenseRequestDTO;
+import com.costa.expense_tracker_api.domain.expense.dtos.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserUtils;
 import com.costa.expense_tracker_api.exceptions.ExpenseNotFound;

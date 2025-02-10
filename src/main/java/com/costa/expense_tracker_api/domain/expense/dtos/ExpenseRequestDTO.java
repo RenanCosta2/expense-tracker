@@ -1,4 +1,4 @@
-package com.costa.expense_tracker_api.domain.expense;
+package com.costa.expense_tracker_api.domain.expense.dtos;
 
 import jakarta.validation.constraints.NotNull;
 

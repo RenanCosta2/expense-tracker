@@ -1,6 +1,10 @@
 package com.costa.expense_tracker_api.services;
 
 import com.costa.expense_tracker_api.domain.user.*;
+import com.costa.expense_tracker_api.domain.user.dtos.AuthenticationDTO;
+import com.costa.expense_tracker_api.domain.user.dtos.LoginResponseDTO;
+import com.costa.expense_tracker_api.domain.user.dtos.RegisterDTO;
+import com.costa.expense_tracker_api.domain.user.dtos.UserResponseDTO;
 import com.costa.expense_tracker_api.exceptions.InvalidCredentialsException;
 import com.costa.expense_tracker_api.exceptions.UserAlreadyExistsException;
 import com.costa.expense_tracker_api.infra.security.TokenService;
