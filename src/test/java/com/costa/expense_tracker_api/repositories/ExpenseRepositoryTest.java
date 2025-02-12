@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,7 +71,7 @@ class ExpenseRepositoryTest {
 
     @Test
     @DisplayName("Should get Expense successfully from DB by ID and User")
-    void findByIdAndUser() {
+    void findByIdAndUserSuccess() {
         Expense expense = new Expense();
         expense.setValue(100.0F);
         expense.setDate(new Date());
@@ -86,6 +87,18 @@ class ExpenseRepositoryTest {
         Optional<Expense> foundedExpense = this.expenseRepository.findByIdAndUser(expense.getId(), expense.getUser());
 
         assertTrue(foundedExpense.isPresent());
+    }
+
+    @Test
+    @DisplayName("Should not get Expense from DB by ID and User")
+    void findByIdAndUserFailure() {
+        UUID expense_id = UUID.randomUUID();
+
+        User user = this.createUser();
+
+        Optional<Expense> foundedExpense = this.expenseRepository.findByIdAndUser(expense_id, user);
+
+        assertFalse(foundedExpense.isPresent());
     }
 
     private User createUser(){
