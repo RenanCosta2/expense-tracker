@@ -59,14 +59,7 @@ class ExpenseRepositoryTest {
 
         assertFalse(foundedExpense.isEmpty());
 
-        Pageable pageable2 = PageRequest.of(1, 1);
-
-        Page<Expense> foundedExpense2 = this.expenseRepository.findExpensesBetweenCustomDate(date,
-                                                                                                new Date(),
-                                                                                                user,
-                                                                                                pageable2);
-
-        assertTrue(foundedExpense2.isEmpty());
+        assertFalse(foundedExpense.hasNext());
     }
 
     @Test
