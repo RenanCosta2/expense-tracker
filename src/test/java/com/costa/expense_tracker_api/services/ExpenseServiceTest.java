@@ -75,6 +75,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Should create expense successfully")
     void createExpense() {
 
         when(UserUtils.getUserLogged()).thenReturn(user);
@@ -93,6 +94,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Should get expense by ID and User successfully")
     void getExpenseSuccess() {
         when(UserUtils.getUserLogged()).thenReturn(user);
 
