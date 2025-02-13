@@ -18,11 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Date;
 import java.util.Optional;
@@ -139,6 +136,65 @@ class ExpenseServiceTest {
 
     @Test
     void updateExpense() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        when(expenseRepository.findByIdAndUser(any(UUID.class), any(User.class))).thenReturn(Optional.ofNullable(expense));
+
+        String id = expense.getId().toString();
+
+        ExpenseRequestDTO update = new ExpenseRequestDTO(
+                200.00F,
+                null,
+                null,
+                "new description"
+        );
+
+        ExpenseResponseDTO expense_got = expenseService.updateExpense(id, update);
+
+        assertEquals(expense_got.value(), update.value());
+        assertEquals(expense_got.description(), update.description());
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidUUIDFormatException when UUID format is invalid")
+    void updateExpenseInvalidUUIDFormat() {
+
+        InvalidUUIDFormatException thrown = assertThrows(InvalidUUIDFormatException.class, () -> {
+            String id = "550e8400-e29b-41d4-a7164466554";
+            ExpenseRequestDTO update = new ExpenseRequestDTO(
+                    200.00F,
+                    null,
+                    null,
+                    "new description"
+            );
+            expenseService.updateExpense(id, update);
+
+        });
+
+        assertEquals("Invalid UUID format", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw ExpenseNotFound exception when the expense is not found")
+    void updateExpenseFailureNotFound() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        when(expenseRepository.findByIdAndUser(any(UUID.class), any(User.class))).thenReturn(Optional.empty());
+
+        ExpenseNotFound thrown = assertThrows(ExpenseNotFound.class, () ->{
+            String id = UUID.randomUUID().toString();
+            ExpenseRequestDTO update = new ExpenseRequestDTO(
+                    200.00F,
+                    null,
+                    null,
+                    "new description"
+            );
+
+            expenseService.updateExpense(id, update);
+
+        });
+
+        assertEquals("Expense not found", thrown.getMessage());
     }
 
     @Test
