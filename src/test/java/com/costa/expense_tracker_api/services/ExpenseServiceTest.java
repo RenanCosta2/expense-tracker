@@ -7,9 +7,12 @@ import com.costa.expense_tracker_api.domain.expense.dtos.ExpenseResponseDTO;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserRole;
 import com.costa.expense_tracker_api.domain.user.UserUtils;
+import com.costa.expense_tracker_api.exceptions.ExpenseNotFound;
+import com.costa.expense_tracker_api.exceptions.InvalidUUIDFormatException;
 import com.costa.expense_tracker_api.repositories.ExpenseRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -100,6 +103,36 @@ class ExpenseServiceTest {
         ExpenseResponseDTO expense_got = expenseService.getExpense(id);
 
         assertEquals(expense_got.id(), expense.getId());
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidUUIDFormatException when UUID format is invalid")
+    void getExpenseInvalidUUIDFormat() {
+
+        InvalidUUIDFormatException thrown = assertThrows(InvalidUUIDFormatException.class, () -> {
+            String id = "550e8400-e29b-41d4-a7164466554";
+            expenseService.getExpense(id);
+
+        });
+
+        assertEquals("Invalid UUID format", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw ExpenseNotFound exception when the expense is not found")
+    void getExpenseFailureNotFound() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        when(expenseRepository.findByIdAndUser(any(UUID.class), any(User.class))).thenReturn(Optional.empty());
+
+        ExpenseNotFound thrown = assertThrows(ExpenseNotFound.class, () ->{
+            String id = UUID.randomUUID().toString();
+
+            expenseService.getExpense(id);
+
+        });
+
+        assertEquals("Expense not found", thrown.getMessage());
     }
 
     @Test
