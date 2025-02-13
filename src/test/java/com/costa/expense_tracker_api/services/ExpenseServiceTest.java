@@ -135,6 +135,7 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Should update expense successfully")
     void updateExpense() {
         when(UserUtils.getUserLogged()).thenReturn(user);
 
