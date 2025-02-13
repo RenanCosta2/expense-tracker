@@ -142,7 +142,48 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void deleteExpense() {
+    @DisplayName("Should delete expense successfully")
+    void deleteExpenseSuccess() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        when(expenseRepository.findByIdAndUser(any(UUID.class), any(User.class))).thenReturn(Optional.ofNullable(expense));
+
+        String id = expense.getId().toString();
+
+        expenseService.deleteExpense(id);
+
+        verify(expenseRepository, times(1)).deleteById(any(UUID.class));
+
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidUUIDFormatException when UUID format is invalid")
+    void deleteExpenseInvalidUUIDFormat() {
+        InvalidUUIDFormatException thrown = assertThrows(InvalidUUIDFormatException.class, () -> {
+            String id = "550e8400-e29b-41d4-a7164466554";
+            expenseService.deleteExpense(id);
+
+        });
+
+        assertEquals("Invalid UUID format", thrown.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw ExpenseNotFound exception when the expense is not found")
+    void deleteExpenseFailureNotFound() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        when(expenseRepository.findByIdAndUser(any(UUID.class), any(User.class))).thenReturn(Optional.empty());
+
+        ExpenseNotFound thrown = assertThrows(ExpenseNotFound.class, () ->{
+            String id = UUID.randomUUID().toString();
+
+            expenseService.deleteExpense(id);
+
+        });
+
+        assertEquals("Expense not found", thrown.getMessage());
     }
 
     @Test
