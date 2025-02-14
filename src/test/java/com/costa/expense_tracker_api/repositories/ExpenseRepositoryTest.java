@@ -35,6 +35,7 @@ class ExpenseRepositoryTest {
     private User user;
     private Expense expense;
     private Expense expense2;
+    private Expense expense3;
 
     @BeforeEach
     void setUp() {
@@ -70,6 +71,19 @@ class ExpenseRepositoryTest {
 
         this.expenseRepository.save(expense2);
 
+        calendar.add(Calendar.MONTH, -7);
+        date = calendar.getTime();
+
+        expense3 = new Expense();
+        expense3.setValue(100.0F);
+        expense3.setDate(date);
+        expense3.setCategory(ExpenseCategory.OTHERS);
+        expense3.setDescription("Description Test");
+
+        expense3.setUser(user);
+
+        this.expenseRepository.save(expense3);
+
     }
 
     @Test
@@ -103,5 +117,16 @@ class ExpenseRepositoryTest {
         Optional<Expense> foundedExpense = this.expenseRepository.findByIdAndUser(expense_id, user);
 
         assertFalse(foundedExpense.isPresent());
+    }
+
+    @Test
+    void findByUser() {
+        Pageable pageable = PageRequest.of(0, 3);
+
+        Page<Expense> expenses = this.expenseRepository.findByUser(user, pageable);
+
+        assertFalse(expenses.isEmpty());
+
+        assertFalse(expenses.hasNext());
     }
 }
