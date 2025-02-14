@@ -166,4 +166,14 @@ public class ExpenseService {
         return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
     }
 
+    public List<ExpenseResponseDTO> getAllExpenses(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        User user = (User) UserUtils.getUserLogged();
+
+        Page<Expense> expensePage = this.expenseRepository.findByUser(user, pageable);
+
+        return expensePage.map(ExpenseResponseDTO::fromEntity).stream().toList();
+    }
+
 }

@@ -23,4 +23,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
     @Query("SELECT e FROM Expense e WHERE e.id = :expenseId AND e.user = :user")
     public Optional<Expense> findByIdAndUser(@Param("expenseId") UUID expenseId,
                                             @Param("user") User user);
+
+    public Page<Expense> findByUser(User user, Pageable pageable);
 }

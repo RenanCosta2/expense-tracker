@@ -32,6 +32,14 @@ public class ExpenseController {
         return ResponseEntity.created(location).body(newExpense);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ExpenseResponseDTO>> get(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size){
+        List<ExpenseResponseDTO> expenses = this.expenseService.getAllExpenses(page, size);
+
+        return ResponseEntity.ok(expenses);
+    }
+
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseResponseDTO> getExpense(@PathVariable String expenseId){
 
