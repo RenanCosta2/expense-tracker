@@ -5,6 +5,7 @@ import com.costa.expense_tracker_api.domain.expense.ExpenseCategory;
 import com.costa.expense_tracker_api.domain.user.User;
 import com.costa.expense_tracker_api.domain.user.UserRole;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,28 +32,49 @@ class ExpenseRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    @Test
-    @DisplayName("Should get Expense successfully from DB between custom dates")
-    void findExpensesBetweenCustomDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
-        Date date = calendar.getTime();
+    private User user;
+    private Expense expense;
+    private Expense expense2;
 
-        Expense expense = new Expense();
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setLogin("loginTest");
+        user.setName("nameTest");
+        user.setPassword("12345678");
+        user.setRole(UserRole.USER);
+
+        this.userRepository.save(user);
+
+        expense = new Expense();
         expense.setValue(100.0F);
-        expense.setDate(date);
+        expense.setDate(new Date());
         expense.setCategory(ExpenseCategory.OTHERS);
         expense.setDescription("Description Test");
-
-        User user = this.createUser();
 
         expense.setUser(user);
 
         this.expenseRepository.save(expense);
 
-        Pageable pageable = PageRequest.of(0, 1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date date = calendar.getTime();
 
-        Page<Expense> foundedExpense = this.expenseRepository.findExpensesBetweenCustomDate(date,
+        expense2 = expense;
+        expense2.setDate(date);
+
+        expense2.setUser(user);
+
+        this.expenseRepository.save(expense2);
+
+    }
+
+    @Test
+    @DisplayName("Should get Expense successfully from DB between custom dates")
+    void findExpensesBetweenCustomDate() {
+        Pageable pageable = PageRequest.of(0, 2);
+
+        Page<Expense> foundedExpense = this.expenseRepository.findExpensesBetweenCustomDate(expense2.getDate(),
                                                                                                 new Date(),
                                                                                                 user,
                                                                                                 pageable);
@@ -65,18 +87,6 @@ class ExpenseRepositoryTest {
     @Test
     @DisplayName("Should get Expense successfully from DB by ID and User")
     void findByIdAndUserSuccess() {
-        Expense expense = new Expense();
-        expense.setValue(100.0F);
-        expense.setDate(new Date());
-        expense.setCategory(ExpenseCategory.OTHERS);
-        expense.setDescription("Description Test");
-
-        User user = this.createUser();
-
-        expense.setUser(user);
-
-        this.expenseRepository.save(expense);
-
         Optional<Expense> foundedExpense = this.expenseRepository.findByIdAndUser(expense.getId(), expense.getUser());
 
         assertTrue(foundedExpense.isPresent());
@@ -87,22 +97,8 @@ class ExpenseRepositoryTest {
     void findByIdAndUserFailure() {
         UUID expense_id = UUID.randomUUID();
 
-        User user = this.createUser();
-
         Optional<Expense> foundedExpense = this.expenseRepository.findByIdAndUser(expense_id, user);
 
         assertFalse(foundedExpense.isPresent());
-    }
-
-    private User createUser(){
-        User user = new User();
-        user.setLogin("loginTest");
-        user.setName("nameTest");
-        user.setPassword("12345678");
-        user.setRole(UserRole.USER);
-
-        this.userRepository.save(user);
-
-        return user;
     }
 }
