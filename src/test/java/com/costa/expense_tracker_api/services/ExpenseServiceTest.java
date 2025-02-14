@@ -20,10 +20,11 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -43,6 +44,9 @@ class ExpenseServiceTest {
     private User user;
 
     private Expense expense;
+    private Expense expenseWeek;
+    private Expense expenseMonth;
+    private Expense expenseThreeMonth;
 
     @BeforeEach
     void setUp() {
@@ -63,6 +67,25 @@ class ExpenseServiceTest {
         expense.setCategory(ExpenseCategory.valueOf("OTHERS"));
         expense.setDescription("description");
         expense.setUser(user);
+
+        Calendar calendar = Calendar.getInstance();
+
+        Date date;
+
+        expenseWeek = expense;
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        date = calendar.getTime();
+        expenseWeek.setDate(date);
+
+        expenseMonth = expense;
+        calendar.add(Calendar.MONTH, -1);
+        date = calendar.getTime();
+        expenseMonth.setDate(date);
+
+        expenseThreeMonth = expense;
+        calendar.add(Calendar.MONTH, -3);
+        date = calendar.getTime();
+        expenseThreeMonth.setDate(date);
 
     }
 
@@ -244,7 +267,25 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Should get past week expenses successfully")
     void getPastWeekExpenses() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        List<Expense> expenses = Arrays.asList(expense, expenseWeek);
+
+        Page<Expense> expensePage = new PageImpl<>(expenses);
+
+        when(expenseRepository.findExpensesBetweenCustomDate(
+                any(Date.class),
+                any(Date.class),
+                any(User.class),
+                any(Pageable.class)))
+                .thenReturn(expensePage);
+
+        List<ExpenseResponseDTO> expenses_response = expenseService.getPastWeekExpenses(0, 5);
+
+        assertEquals(2, expenses_response.size());
+
     }
 
     @Test
