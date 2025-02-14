@@ -110,7 +110,7 @@ class ExpenseServiceTest {
 
         verify(expenseRepository, times(1)).save(any(Expense.class));
 
-        assertEquals(expense.description(), request.description());
+        assertEquals(request.description(), expense.description());
     }
 
     @Test
@@ -124,7 +124,7 @@ class ExpenseServiceTest {
 
         ExpenseResponseDTO expense_got = expenseService.getExpense(id);
 
-        assertEquals(expense_got.id(), expense.getId());
+        assertEquals(expense.getId(), expense_got.id());
     }
 
     @Test
@@ -175,8 +175,8 @@ class ExpenseServiceTest {
 
         ExpenseResponseDTO expense_got = expenseService.updateExpense(id, update);
 
-        assertEquals(expense_got.value(), update.value());
-        assertEquals(expense_got.description(), update.description());
+        assertEquals(update.value(), expense_got.value());
+        assertEquals(update.description(), expense_got.description());
     }
 
     @Test
