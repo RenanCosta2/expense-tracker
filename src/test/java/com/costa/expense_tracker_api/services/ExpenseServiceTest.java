@@ -354,4 +354,22 @@ class ExpenseServiceTest {
 
         assertEquals(3, expenses_response.size());
     }
+
+    @Test
+    @DisplayName("Should get all expenses successfully")
+    void getAllExpenses() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        List<Expense> expenses = Arrays.asList(expense, expenseWeek, expenseMonth, expenseThreeMonth);
+
+        Page<Expense> expensePage = new PageImpl<>(expenses);
+
+        when(expenseRepository.findByUser(any(User.class),
+                any(Pageable.class)))
+                .thenReturn(expensePage);
+
+        List<ExpenseResponseDTO> expenses_response = expenseService.getAllExpenses(0, 5);
+
+        assertEquals(4, expenses_response.size());
+    }
 }
