@@ -60,8 +60,11 @@ class ExpenseRepositoryTest {
         calendar.add(Calendar.DAY_OF_MONTH, -7);
         Date date = calendar.getTime();
 
-        expense2 = expense;
+        expense2 = new Expense();
+        expense2.setValue(100.0F);
         expense2.setDate(date);
+        expense2.setCategory(ExpenseCategory.OTHERS);
+        expense2.setDescription("Description Test");
 
         expense2.setUser(user);
 
