@@ -289,14 +289,69 @@ class ExpenseServiceTest {
     }
 
     @Test
+    @DisplayName("Should get past month expenses successfully")
     void getPastMonthExpenses() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        List<Expense> expenses = Arrays.asList(expense, expenseWeek, expenseMonth);
+
+        Page<Expense> expensePage = new PageImpl<>(expenses);
+
+        when(expenseRepository.findExpensesBetweenCustomDate(
+                any(Date.class),
+                any(Date.class),
+                any(User.class),
+                any(Pageable.class)))
+                .thenReturn(expensePage);
+
+        List<ExpenseResponseDTO> expenses_response = expenseService.getPastMonthExpenses(0, 5);
+
+        assertEquals(3, expenses_response.size());
     }
 
     @Test
+    @DisplayName("Should get past three month expenses successfully")
     void getPastThreeMonthsExpenses() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        List<Expense> expenses = Arrays.asList(expense, expenseWeek, expenseMonth, expenseThreeMonth);
+
+        Page<Expense> expensePage = new PageImpl<>(expenses);
+
+        when(expenseRepository.findExpensesBetweenCustomDate(
+                any(Date.class),
+                any(Date.class),
+                any(User.class),
+                any(Pageable.class)))
+                .thenReturn(expensePage);
+
+        List<ExpenseResponseDTO> expenses_response = expenseService.getPastThreeMonthsExpenses(0, 5);
+
+        assertEquals(4, expenses_response.size());
     }
 
     @Test
+    @DisplayName("Should get expenses between custom date successfully")
     void getExpensesBetweenCustomDate() {
+        when(UserUtils.getUserLogged()).thenReturn(user);
+
+        List<Expense> expenses = Arrays.asList(expenseWeek, expenseMonth, expenseThreeMonth);
+
+        Page<Expense> expensePage = new PageImpl<>(expenses);
+
+        when(expenseRepository.findExpensesBetweenCustomDate(
+                any(Date.class),
+                any(Date.class),
+                any(User.class),
+                any(Pageable.class)))
+                .thenReturn(expensePage);
+
+        List<ExpenseResponseDTO> expenses_response = expenseService.getExpensesBetweenCustomDate(
+                0,
+                5,
+                expenseThreeMonth.getDate(),
+                expenseWeek.getDate());
+
+        assertEquals(3, expenses_response.size());
     }
 }
